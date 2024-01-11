@@ -1,16 +1,20 @@
 import {createSlice} from '@reduxjs/toolkit';
 const INITIAL_STATE = {
-
+  products: [],
+  selectedProduct: {},
 };
 
 const AppReducer = createSlice({
-  name: 'HomeReducer',
+  name: 'Reducer',
   initialState: INITIAL_STATE,
   reducers: {
-    addStoreList: (state, action) => {
-
+    addProductList: (state, action) => {
+      state.products = action.payload;
+    },
+    addSelectedProduct: (state, action) => {
+      state.selectedProduct = action.payload;
     },
   },
 });
-export const {addStoreList} = AppReducer.actions;
+export const {addProductList, addSelectedProduct} = AppReducer.actions;
 export default AppReducer.reducer;
