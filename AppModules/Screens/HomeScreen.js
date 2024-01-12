@@ -1,6 +1,12 @@
 import React, {useCallback, useEffect} from 'react';
 import {Dimensions, FlatList, Pressable, View} from 'react-native';
-import {MD2Colors, Searchbar, Text} from 'react-native-paper';
+import {
+  ActivityIndicator,
+  BottomNavigation,
+  MD2Colors,
+  Searchbar,
+  Text,
+} from 'react-native-paper';
 import styles from '../Styles/homeStyles';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
@@ -9,12 +15,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {addProductList} from '../Redux/Reducers';
 import reactotron from 'reactotron-react-native';
 import ProductCard from '../Components/ProductCard';
-import {SafeAreaContext} from 'react-native-safe-area-context';
 import {addToCart} from '../Redux/CartReducer';
-import {useToast} from 'react-native-toast-notifications';
-import CartIcon from "../Components/CartIcon";
+import {Toast, useToast} from 'react-native-toast-notifications';
+import CartIcon from '../Components/CartIcon';
 const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -29,6 +33,7 @@ const HomeScreen = () => {
         dispatch(addProductList(response.data.products));
       } catch (e) {
         console.error(`${e.message()}`);
+      } finally {
       }
     };
     fetchProducts();
@@ -38,13 +43,17 @@ const HomeScreen = () => {
       image={item.thumbnail}
       title={item.title}
       price={item.price}
-      onFavoritePress={() => console.log('Favorite Pressed')}
+      onFavoritePress={() =>
+        toast.show('Added to Favorites', {
+          type: 'danger',
+        })
+      }
       onAddToCartPress={() => {
         dispatch(addToCart(item));
 
-        toast.show('Added to Cart', {
+        toast.show(`${item.title} Added to Cart`, {
           type: 'success',
-          duration: 1700,
+          duration: 1400,
           animationType: 'zoom-in',
         });
         setTimeout(() => {
@@ -62,7 +71,7 @@ const HomeScreen = () => {
     () => (
       <Text
         style={{
-          fontSize: 30,
+          fontSize: 34,
           marginHorizontal: 15,
           marginVertical: 10,
           padding: 1,
@@ -70,7 +79,7 @@ const HomeScreen = () => {
         Recommended Products
       </Text>
     ),
-    [searchQuery],
+    [],
   );
   return (
     <View style={styles.container}>
@@ -87,7 +96,7 @@ const HomeScreen = () => {
               }}>
               Hey, Lakshu
             </Text>
-            <CartIcon onPress={() => navigation.navigate('Cart')}/>
+            <CartIcon onPress={() => navigation.navigate('Cart')} />
           </View>
           <Searchbar
             placeholder="Search Products or Store"
@@ -105,7 +114,6 @@ const HomeScreen = () => {
           />
         </View>
       </View>
-
       <FlatList
         style={{
           width: width,
@@ -118,6 +126,13 @@ const HomeScreen = () => {
         key={item => item.id}
         renderItem={renderItem}
         initialNumToRender={15}
+        ListEmptyComponent={() => (
+          <ActivityIndicator
+            animating={true}
+            color={MD2Colors.blue700}
+            size={'large'}
+          />
+        )}
         ListHeaderComponent={ListHeaderComponent}
       />
     </View>

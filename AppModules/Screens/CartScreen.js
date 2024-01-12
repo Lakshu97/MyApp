@@ -5,12 +5,15 @@ import styles from '../Styles/cartStyles';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import CartItem from '../Components/CartCard';
-import { Toast } from "react-native-toast-notifications";
+import {Toast} from 'react-native-toast-notifications';
+import showNotification from '../Notification/notifications';
 const width = Dimensions.get('window').width;
+const getTitles = arr => {
+  return arr.map(itm => itm.title);
+};
 const CartScreen = () => {
   const navigation = useNavigation();
   const [totalAmount, setTotalAmount] = useState(0);
-  const dispatch = useDispatch();
   const cart = useSelector(state => state.cartReducer.cart);
   useEffect(() => {
     return () => {
@@ -38,23 +41,28 @@ const CartScreen = () => {
           <Card.Content>
             <View style={styles.total}>
               <Text style={styles.textTotal}>SubTotal</Text>
-              <Text>$58</Text>
+              <Text>${totalAmount}</Text>
             </View>
             <View style={styles.total}>
-              <Text style={styles.textTotal}>Shipping</Text>
-              <Text>$20</Text>
+              <Text style={styles.textTotal}>Shipping & Delivery</Text>
+              <Text>$2</Text>
             </View>
             <View style={styles.total}>
               <Text style={styles.textTotal}>Total</Text>
-              <Text>${totalAmount}</Text>
+              <Text>${totalAmount+2}</Text>
             </View>
           </Card.Content>
         </Card>
         <Button
           onPress={() => {
-            Toast.show('Order Placed SuccessFully',{
-              type:'success',
-            })
+            let titles = JSON.stringify(getTitles(cart));
+            Toast.show('Order Placed SuccessFully', {
+              type: 'success',
+            });
+            showNotification({
+              title: 'Order Placed SuccessFully',
+              body: `Order containing ${titles} has been Placed Successfully`,
+            });
           }}
           buttonColor={MD2Colors.blue500}
           textColor={MD2Colors.white}
