@@ -10,6 +10,9 @@ import {addProductList} from '../Redux/Reducers';
 import reactotron from 'reactotron-react-native';
 import ProductCard from '../Components/ProductCard';
 import {SafeAreaContext} from 'react-native-safe-area-context';
+import {addToCart} from '../Redux/CartReducer';
+import {useToast} from 'react-native-toast-notifications';
+import CartIcon from "../Components/CartIcon";
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const HomeScreen = () => {
@@ -17,6 +20,8 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = React.useState('');
   const products = useSelector(state => state.appReducer.products);
+  const toast = useToast();
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -30,11 +35,22 @@ const HomeScreen = () => {
   }, [dispatch]);
   const renderItem = ({item}) => (
     <ProductCard
-      image={item.images[0]}
+      image={item.thumbnail}
       title={item.title}
       price={item.price}
       onFavoritePress={() => console.log('Favorite Pressed')}
-      onAddToCartPress={() => navigation.navigate('Cart')}
+      onAddToCartPress={() => {
+        dispatch(addToCart(item));
+
+        toast.show('Added to Cart', {
+          type: 'success',
+          duration: 1700,
+          animationType: 'zoom-in',
+        });
+        setTimeout(() => {
+          navigation.navigate('Cart');
+        }, 1200);
+      }}
       onPress={() =>
         navigation.navigate('Detail', {
           id: item.id,
@@ -71,7 +87,7 @@ const HomeScreen = () => {
               }}>
               Hey, Lakshu
             </Text>
-            <Text>Sd</Text>
+            <CartIcon onPress={() => navigation.navigate('Cart')}/>
           </View>
           <Searchbar
             placeholder="Search Products or Store"

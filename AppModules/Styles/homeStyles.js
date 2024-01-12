@@ -20,7 +20,8 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 0,
-    height: height * 0.13
+    height: height * 0.13,
+    alignItems:'center'
   },
   topView:{
     backgroundColor: MD2Colors.blue500,

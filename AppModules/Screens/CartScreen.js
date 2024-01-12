@@ -1,18 +1,69 @@
-import React from 'react';
-import {View} from 'react-native';
-import { Appbar, Text } from "react-native-paper";
+import React, {useEffect, useState} from 'react';
+import {Dimensions, FlatList, View} from 'react-native';
+import {Appbar, Button, Card, MD2Colors, Text} from 'react-native-paper';
 import styles from '../Styles/cartStyles';
-import { useNavigation } from "@react-navigation/native";
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import CartItem from '../Components/CartCard';
+import { Toast } from "react-native-toast-notifications";
+const width = Dimensions.get('window').width;
 const CartScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const [totalAmount, setTotalAmount] = useState(0);
+  const dispatch = useDispatch();
+  const cart = useSelector(state => state.cartReducer.cart);
+  useEffect(() => {
+    return () => {
+      //   dispatch(cleanCart());
+    };
+  }, []);
+  useEffect(() => {
+    // Calculate total amount when the cart items change
+    const newTotalAmount = cart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0,
+    );
+    setTotalAmount(newTotalAmount);
+  }, [cart]);
+  const renderCartItem = ({item}) => <CartItem item={item} />;
   return (
-    <View style={styles.container}>
+    <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Cart" />
+        <Appbar.Content title={`Shopping Cart (${cart.length}) items`} />
       </Appbar.Header>
-      <Text>CartScreen</Text>
-    </View>
+      <View style={styles.container}>
+        <FlatList data={cart} renderItem={renderCartItem} />
+        <Card style={{backgroundColor: MD2Colors.transparent}}>
+          <Card.Content>
+            <View style={styles.total}>
+              <Text style={styles.textTotal}>SubTotal</Text>
+              <Text>$58</Text>
+            </View>
+            <View style={styles.total}>
+              <Text style={styles.textTotal}>Shipping</Text>
+              <Text>$20</Text>
+            </View>
+            <View style={styles.total}>
+              <Text style={styles.textTotal}>Total</Text>
+              <Text>${totalAmount}</Text>
+            </View>
+          </Card.Content>
+        </Card>
+        <Button
+          onPress={() => {
+            Toast.show('Order Placed SuccessFully',{
+              type:'success',
+            })
+          }}
+          buttonColor={MD2Colors.blue500}
+          textColor={MD2Colors.white}
+          style={{marginVertical: 15, bottom: 23, marginHorizontal: 10}}
+          mode="contained-tonal">
+          Proceed to Checkout
+        </Button>
+      </View>
+    </>
   );
 };
 export default React.memo(CartScreen);

@@ -1,8 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit';
 import AppReducer from './Reducers';
 import AppReactotron from '../DevConfig/Reactotron';
+import CartReducer from './CartReducer';
 const rootReducer = {
   appReducer: AppReducer,
+  cartReducer: CartReducer,
 };
 const store = configureStore({
   reducer: rootReducer,
@@ -10,6 +12,5 @@ const store = configureStore({
   devTools: true,
   enhancers: getDefaultEnhancers =>
     getDefaultEnhancers().concat(AppReactotron.createEnhancer()),
-  //enhancers: [AppReactotron.createEnhancer()],
 });
 export default store;

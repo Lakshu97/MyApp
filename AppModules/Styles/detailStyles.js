@@ -10,5 +10,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     padding: 5,
     margin: 10,
+    backgroundColor:'red'
   },
 });
