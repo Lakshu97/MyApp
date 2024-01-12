@@ -14,7 +14,10 @@ const AppReducer = createSlice({
     addSelectedProduct: (state, action) => {
       state.selectedProduct = action.payload;
     },
+    cleanSelectProduct: (state,action) => {
+      state.selectedProduct = {}
+    }
   },
 });
-export const {addProductList, addSelectedProduct} = AppReducer.actions;
+export const {addProductList, addSelectedProduct,cleanSelectProduct} = AppReducer.actions;
 export default AppReducer.reducer;

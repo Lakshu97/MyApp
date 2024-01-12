@@ -6,7 +6,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import axios from 'axios';
 import {PRODUCT_URL} from '../Components/Constants';
 import {useDispatch, useSelector} from 'react-redux';
-import {addSelectedProduct} from '../Redux/Reducers';
+import {addSelectedProduct, cleanSelectProduct} from '../Redux/Reducers';
 const DetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -24,7 +24,10 @@ const DetailScreen = () => {
       }
     };
     fetchProductById(route.params.id);
-  }, []);
+    return () => {
+      dispatch(cleanSelectProduct());
+    };
+  }, [dispatch, route.params.id]);
   return (
     <View style={styles.container}>
       <Appbar.Header>
