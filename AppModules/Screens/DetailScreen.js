@@ -72,34 +72,16 @@ const DetailScreen = () => {
           <ImageCarousel images={selectedProduct.images} />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
-              style={{
-                fontSize: 29,
-                padding: 5,
-                marginVertical: 5,
-                marginHorizontal: 8,
-                fontWeight: '400',
-                color: MD2Colors.black,
-              }}>
+              style={styles.price}>
               $ {selectedProduct?.price}
             </Text>
             <Text
-              style={{
-                backgroundColor: MD2Colors.blue900,
-                color: MD2Colors.white,
-                fontSize: 21,
-                padding: 3,
-                borderRadius: 10,
-                marginLeft: 10,
-              }}>
+              style={styles.discount}>
               {Math.ceil(selectedProduct.discountPercentage)}% OFF
             </Text>
           </View>
           <Text
-            style={{
-              marginHorizontal: 13,
-              fontWeight: '500',
-              color: MD2Colors.black,
-            }}>
+            style={styles.rating}>
             Rating : {selectedProduct.rating}
           </Text>
           <View

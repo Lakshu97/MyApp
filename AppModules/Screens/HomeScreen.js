@@ -38,47 +38,40 @@ const HomeScreen = () => {
     };
     fetchProducts();
   }, [dispatch]);
-  const renderItem = ({item}) => (
-    <ProductCard
-      image={item.thumbnail}
-      title={item.title}
-      price={item.price}
-      onFavoritePress={() =>
-        toast.show('Added to Favorites', {
-          type: 'danger',
-        })
-      }
-      onAddToCartPress={() => {
-        dispatch(addToCart(item));
+  const renderItem = useCallback(
+    ({item}) => (
+      <ProductCard
+        image={item.thumbnail}
+        title={item.title}
+        price={item.price}
+        onFavoritePress={() =>
+          toast.show('Added to Favorites', {
+            type: 'danger',
+          })
+        }
+        onAddToCartPress={() => {
+          dispatch(addToCart(item));
 
-        toast.show(`${item.title} Added to Cart`, {
-          type: 'success',
-          duration: 1400,
-          animationType: 'zoom-in',
-        });
-        setTimeout(() => {
-          navigation.navigate('Cart');
-        }, 1200);
-      }}
-      onPress={() =>
-        navigation.navigate('Detail', {
-          id: item.id,
-        })
-      }
-    />
+          toast.show(`${item.title} Added to Cart`, {
+            type: 'success',
+            duration: 1400,
+            animationType: 'zoom-in',
+          });
+          setTimeout(() => {
+            navigation.navigate('Cart');
+          }, 1200);
+        }}
+        onPress={() =>
+          navigation.navigate('Detail', {
+            id: item.id,
+          })
+        }
+      />
+    ),
+    [dispatch, navigation, toast],
   );
   const ListHeaderComponent = useCallback(
-    () => (
-      <Text
-        style={{
-          fontSize: 34,
-          marginHorizontal: 15,
-          marginVertical: 10,
-          padding: 1,
-        }}>
-        Recommended Products
-      </Text>
-    ),
+    () => <Text style={styles.recommendText}>Recommended Products</Text>,
     [],
   );
   return (
@@ -86,16 +79,7 @@ const HomeScreen = () => {
       <View style={styles.listheader}>
         <View style={styles.topView}>
           <View style={styles.topHeader}>
-            <Text
-              style={{
-                color: MD2Colors.white,
-                fontSize: 26,
-                padding: 4,
-                marginVertical: 15,
-                marginHorizontal: 5,
-              }}>
-              Hey, Lakshu
-            </Text>
+            <Text style={styles.topText}>Hey, Lakshu</Text>
             <CartIcon onPress={() => navigation.navigate('Cart')} />
           </View>
           <Searchbar
@@ -104,23 +88,12 @@ const HomeScreen = () => {
             onChangeText={txt => setSearchQuery(txt)}
             value={searchQuery}
             elevation={4}
-            style={{
-              backgroundColor: MD2Colors.blue700,
-              borderColor: MD2Colors.white,
-              marginBottom: 16,
-              width: width * 0.93,
-              marginHorizontal: 10,
-            }}
+            style={styles.searchBar}
           />
         </View>
       </View>
       <FlatList
-        style={{
-          width: width,
-          marginVertical: 10,
-          marginHorizontal: 10,
-          flex: 1,
-        }}
+        style={styles.flatListStyles}
         data={products}
         numColumns={2}
         key={item => item.id}
@@ -128,7 +101,7 @@ const HomeScreen = () => {
         initialNumToRender={15}
         ListEmptyComponent={() => (
           <ActivityIndicator
-            animating={true}
+            animating
             color={MD2Colors.blue700}
             size={'large'}
           />
